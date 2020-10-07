@@ -2,15 +2,12 @@ resource "aws_vpc" "vtt" {
   cidr_block = "10.0.0.0/24"
   enable_dns_hostnames = true
   enable_dns_support = true
-  tags {
-    Name = "vtt"
-  }
 }
 
 resource "aws_subnet" "vtt" {
   cidr_block = "${cidrsubnet(aws_vpc.vtt.cidr_block, 3, 1)}"
   vpc_id = "${aws_vpc.vtt.id}"
-  availability_zone = var.region
+  availability_zone = "us-west-2a"
 }
 
 resource "aws_security_group" "vtt-ingress" {
@@ -40,9 +37,6 @@ resource "aws_eip" "vtt" {
 
 resource "aws_internet_gateway" "vtt" {
   vpc_id = "${aws_vpc.vtt.id}"
-  tags {
-    Name = "vtt"
-  }
 }
 
 resource "aws_route_table" "vtt" {
@@ -52,8 +46,8 @@ resource "aws_route_table" "vtt" {
     gateway_id = "${aws_internet_gateway.vtt.id}"
   }
 
-  tags {
-    Name = "test-env-route-table"
+  tags = {
+    Name = "vtt"
   }
 }
 
