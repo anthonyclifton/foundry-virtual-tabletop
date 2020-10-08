@@ -10,17 +10,9 @@ resource "aws_subnet" "vtt" {
   availability_zone = "us-west-2a"
 }
 
-resource "aws_security_group" "vtt-ingress" {
+resource "aws_security_group" "vtt" {
   name = "vtt-allow-all"
   vpc_id = "${aws_vpc.vtt.id}"
-  ingress {
-    cidr_blocks = [
-      "0.0.0.0/0"
-    ]
-    from_port = 22
-    to_port = 22
-    protocol = "tcp"
-  }
 
   egress {
     from_port = 0
@@ -28,6 +20,46 @@ resource "aws_security_group" "vtt-ingress" {
     protocol = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+}
+
+resource "aws_security_group_rule" "ingress_22" {
+  type        = "ingress"
+  from_port   = 22
+  to_port     = 22
+  protocol    = "tcp"
+  cidr_blocks = ["0.0.0.0/0"]
+
+  security_group_id = aws_security_group.vtt.id
+}
+
+resource "aws_security_group_rule" "ingress_80" {
+  type        = "ingress"
+  from_port   = 80
+  to_port     = 80
+  protocol    = "tcp"
+  cidr_blocks = ["0.0.0.0/0"]
+
+  security_group_id = aws_security_group.vtt.id
+}
+
+resource "aws_security_group_rule" "ingress_443" {
+  type        = "ingress"
+  from_port   = 443
+  to_port     = 443
+  protocol    = "tcp"
+  cidr_blocks = ["0.0.0.0/0"]
+
+  security_group_id = aws_security_group.vtt.id
+}
+
+resource "aws_security_group_rule" "ingress_30000" {
+  type        = "ingress"
+  from_port   = 30000
+  to_port     = 30000
+  protocol    = "tcp"
+  cidr_blocks = ["0.0.0.0/0"]
+
+  security_group_id = aws_security_group.vtt.id
 }
 
 resource "aws_eip" "vtt" {
